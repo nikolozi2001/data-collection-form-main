@@ -3,8 +3,13 @@ import React, { useState } from "react";
 const TaskDataCollectionForm: React.FC = () => {
   const [tasks, setTasks] = useState([{ output: "", input: "" }]);
   const [isAddTaskButtonDisabled, setIsAddTaskButtonDisabled] = useState(true);
+  const [isDoneButtonDisabled, setIsDoneButtonDisabled] = useState(true);
 
-  const handleTaskInputChange = (index: number, field: "output" | "input", value: string) => {
+  const handleTaskInputChange = (
+    index: number,
+    field: "output" | "input",
+    value: string
+  ) => {
     const newTasks = [...tasks];
     newTasks[index][field] = value;
     setTasks(newTasks);
@@ -18,11 +23,36 @@ const TaskDataCollectionForm: React.FC = () => {
     } else {
       setIsAddTaskButtonDisabled(true);
     }
+
+    const allTasksValid = tasks.every(
+      (task) => task.output.trim() !== "" && task.input.trim() !== ""
+    );
+    setIsDoneButtonDisabled(!allTasksValid);
   };
 
   const handleAddTaskClick = () => {
     setTasks([...tasks, { output: "", input: "" }]);
     setIsAddTaskButtonDisabled(true);
+  };
+
+  const handleDoneClick = () => {
+    if (window.confirm("Are you sure you want to submit the form?")) {
+      const formData = { tasks };
+      fetch("https://api.example.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
   };
 
   return (
@@ -33,26 +63,28 @@ const TaskDataCollectionForm: React.FC = () => {
           <select
             id={`output-${index}`}
             value={task.output}
-            onChange={(e) => handleTaskInputChange(index, "output", e.target.value)}
+            onChange={(e) =>
+              handleTaskInputChange(index, "output", e.target.value)
+            }
             required
           >
             <option value="">Select output</option>
             <option value="output1">Output 1</option>
             <option value="output2">Output 2</option>
-            {/* Add more options as needed */}
           </select>
           <br />
           <label htmlFor={`input-${index}`}>Input:</label>
           <select
             id={`input-${index}`}
             value={task.input}
-            onChange={(e) => handleTaskInputChange(index, "input", e.target.value)}
+            onChange={(e) =>
+              handleTaskInputChange(index, "input", e.target.value)
+            }
             required
           >
             <option value="">Select input</option>
             <option value="input1">Input 1</option>
             <option value="input2">Input 2</option>
-            {/* Add more options as needed */}
           </select>
           <br />
         </div>
@@ -63,6 +95,14 @@ const TaskDataCollectionForm: React.FC = () => {
         disabled={isAddTaskButtonDisabled}
       >
         Add new task
+      </button>
+      <br />
+      <button
+        type="button"
+        onClick={handleDoneClick}
+        disabled={isDoneButtonDisabled}
+      >
+        Done
       </button>
     </div>
   );
