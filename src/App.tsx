@@ -1,60 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import "./App.css";
+import UserInfoForm from "./components/UserInfoForm";
+import TaskDataCollectionForm from "./components/TaskDataCollectionForm";
 
-const App: React.FC = () => {
-    const [userId, setUserId] = useState('');
-    const [jobTitle, setJobTitle] = useState('');
-    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+function App() {
+  const [step, setStep] = useState(1);
 
-    const handleInputChange = () => {
-        if (userId.trim() !== '' && jobTitle.trim() !== '') {
-            setIsButtonDisabled(false);
-        } else {
-            setIsButtonDisabled(true);
-        }
-    };
+  const handleNext = () => {
+    setStep(2);
+  };
 
-    const handleNextClick = () => {
-        // Logic to navigate to the next screen
-        console.log('Navigating to the next screen...');
-    };
-
-    return (
-        <div>
-            <form>
-                <label htmlFor="user-id">User ID:</label>
-                <input
-                    type="text"
-                    id="user-id"
-                    value={userId}
-                    onChange={(e) => {
-                        setUserId(e.target.value);
-                        handleInputChange();
-                    }}
-                    required
-                />
-                <br />
-                <label htmlFor="job-title">Job Title:</label>
-                <input
-                    type="text"
-                    id="job-title"
-                    value={jobTitle}
-                    onChange={(e) => {
-                        setJobTitle(e.target.value);
-                        handleInputChange();
-                    }}
-                    required
-                />
-                <br />
-                <button
-                    type="button"
-                    onClick={handleNextClick}
-                    disabled={isButtonDisabled}
-                >
-                    Next
-                </button>
-            </form>
-        </div>
-    );
-};
+  return (
+    <>
+      {step === 1 && <UserInfoForm onNext={handleNext} />}
+      {step === 2 && <TaskDataCollectionForm />}
+    </>
+  );
+}
 
 export default App;
