@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../App.css";
 
 const TaskDataCollectionForm: React.FC = () => {
   const [tasks, setTasks] = useState([{ output: "", input: "" }]);
@@ -56,7 +57,7 @@ const TaskDataCollectionForm: React.FC = () => {
   };
 
   return (
-    <div>
+    <form>
       {tasks.map((task, index) => (
         <div key={index}>
           <label htmlFor={`output-${index}`}>Output:</label>
@@ -87,6 +88,7 @@ const TaskDataCollectionForm: React.FC = () => {
             <option value="input2">Input 2</option>
           </select>
           <br />
+          <div className="divider"></div>
         </div>
       ))}
       <button
@@ -104,7 +106,7 @@ const TaskDataCollectionForm: React.FC = () => {
       >
         Done
       </button>
-    </div>
+    </form>
   );
 };
 

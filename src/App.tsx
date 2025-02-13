@@ -11,10 +11,10 @@ function App() {
   };
 
   return (
-    <>
+    <div style={{ padding: "20px" }}>
       {step === 1 && <UserInfoForm onNext={handleNext} />}
       {step === 2 && <TaskDataCollectionForm />}
-    </>
+    </div>
   );
 }
 
