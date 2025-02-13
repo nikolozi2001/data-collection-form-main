@@ -5,6 +5,7 @@ const TaskDataCollectionForm: React.FC = () => {
   const [tasks, setTasks] = useState([{ output: "", input: "" }]);
   const [isAddTaskButtonDisabled, setIsAddTaskButtonDisabled] = useState(true);
   const [isDoneButtonDisabled, setIsDoneButtonDisabled] = useState(true);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleTaskInputChange = (
     index: number,
@@ -37,29 +38,43 @@ const TaskDataCollectionForm: React.FC = () => {
   };
 
   const handleDoneClick = () => {
-    if (window.confirm("Are you sure you want to submit the form?")) {
-      const formData = { tasks };
-      fetch("https://api.example.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    setShowConfirmation(false);
+    const formData = { tasks };
+    fetch("https://api.example.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Success:", data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }
+      .then((data) => {
+        console.log("Success:", data);
+        alert("Form submitted successfully!");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("There was an error submitting the form. Please try again.");
+      });
+  };
+
+  const handleCancelSubmit = () => {
+    setShowConfirmation(false);
   };
 
   return (
     <form>
       {tasks.map((task, index) => (
-        <div key={index}>
+        <div key={index} className="task-item">
           <label htmlFor={`output-${index}`}>Output:</label>
           <select
             id={`output-${index}`}
@@ -68,6 +83,7 @@ const TaskDataCollectionForm: React.FC = () => {
               handleTaskInputChange(index, "output", e.target.value)
             }
             required
+            aria-label={`Output for task ${index + 1}`}
           >
             <option value="">Select output</option>
             <option value="output1">Output 1</option>
@@ -106,6 +122,18 @@ const TaskDataCollectionForm: React.FC = () => {
       >
         Done
       </button>
+
+      {showConfirmation && (
+        <div className="confirmation-modal">
+          <p>Are you sure you want to submit the form?</p>
+          <button type="button" onClick={handleConfirmSubmit}>
+            Yes
+          </button>
+          <button type="button" onClick={handleCancelSubmit}>
+            No
+          </button>
+        </div>
+      )}
     </form>
   );
 };
