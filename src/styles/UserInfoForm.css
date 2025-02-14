@@ -1,0 +1,50 @@
+.user-info-form {
+  width: 90%;
+  text-align: center;
+}
+
+.mail-icon {
+  margin-bottom: 16px;
+}
+
+/* Input styles */
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #40a9ff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Button styles */
+.next-button {
+  width: 100%;
+  display: inline-block;
+  margin-top: 10%;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #1890ff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.next-button:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+
+.next-button:hover:not(:disabled) {
+  background-color: #40a9ff;
+}

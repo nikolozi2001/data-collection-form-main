@@ -1,16 +1,43 @@
-import React, { useState } from "react";
-import "../App.css";
+import React, { useState, useEffect } from "react";
+import "../styles/TaskDataCollectionForm.css";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import AddIcon from "@mui/icons-material/Add";
+import MailIcon from "@mui/icons-material/Mail";
 
 const TaskDataCollectionForm: React.FC = () => {
-  const [tasks, setTasks] = useState([{ output: "", input: "" }]);
+  interface Task {
+    outputs: string[];
+    inputs: string[];
+  }
+
+  const initialTasks: Task[] = [
+    {
+      outputs: ["SMS Chart"],
+      inputs: ["Customer Tech Pack"],
+    },
+    {
+      outputs: ["Email Report"],
+      inputs: ["Financial Data"],
+    },
+    {
+      outputs: ["Dashboard Report", "Performance Metrics"],
+      inputs: ["Sales Data", "Customer Feedback"],
+    },
+  ];
+
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [isAddTaskButtonDisabled, setIsAddTaskButtonDisabled] = useState(true);
   const [isDoneButtonDisabled, setIsDoneButtonDisabled] = useState(true);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
+  useEffect(() => {
+    validateTaskInputs(tasks);
+  }, [tasks]);
+
   const handleTaskInputChange = (
     index: number,
-    field: "output" | "input",
-    value: string
+    field: "outputs" | "inputs",
+    value: string[]
   ) => {
     const newTasks = [...tasks];
     newTasks[index][field] = value;
@@ -18,23 +45,30 @@ const TaskDataCollectionForm: React.FC = () => {
     validateTaskInputs(newTasks);
   };
 
-  const validateTaskInputs = (tasks: { output: string; input: string }[]) => {
+  const validateTaskInputs = (
+    tasks: { outputs: string[]; inputs: string[] }[]
+  ) => {
     const lastTask = tasks[tasks.length - 1];
-    if (lastTask.output.trim() !== "" && lastTask.input.trim() !== "") {
+    if (lastTask.outputs.length > 0 && lastTask.inputs.length > 0) {
       setIsAddTaskButtonDisabled(false);
     } else {
       setIsAddTaskButtonDisabled(true);
     }
 
     const allTasksValid = tasks.every(
-      (task) => task.output.trim() !== "" && task.input.trim() !== ""
+      (task) => task.outputs.length > 0 && task.inputs.length > 0
     );
     setIsDoneButtonDisabled(!allTasksValid);
   };
 
   const handleAddTaskClick = () => {
-    setTasks([...tasks, { output: "", input: "" }]);
+    setTasks([...tasks, { outputs: [], inputs: [] }]);
     setIsAddTaskButtonDisabled(true);
+  };
+
+  const handleDeleteTaskClick = (index: number) => {
+    const newTasks = tasks.filter((_, i) => i !== index);
+    setTasks(newTasks);
   };
 
   const handleDoneClick = () => {
@@ -43,7 +77,7 @@ const TaskDataCollectionForm: React.FC = () => {
 
   const handleConfirmSubmit = () => {
     setShowConfirmation(false);
-    const formData = { tasks };
+    const formData = { userId: "JohnSmith123", jobTitle: "Merchant", tasks };
     fetch("https://api.example.com/submit", {
       method: "POST",
       headers: {
@@ -72,51 +106,69 @@ const TaskDataCollectionForm: React.FC = () => {
   };
 
   return (
-    <form>
+    <form className="task-data-collection-form">
+      <MailIcon className="mail-icon" fontSize="large" />
+      <h2>Tell us about yourself</h2>
       {tasks.map((task, index) => (
         <div key={index} className="task-item">
-          <label htmlFor={`output-${index}`}>Output:</label>
+          <label htmlFor={`outputs-${index}`}> {index + 1} I create the</label>
           <select
-            id={`output-${index}`}
-            value={task.output}
+            id={`outputs-${index}`}
+            value={task.outputs}
             onChange={(e) =>
-              handleTaskInputChange(index, "output", e.target.value)
-            }
-            required
-            aria-label={`Output for task ${index + 1}`}
-          >
-            <option value="">Select output</option>
-            <option value="output1">Output 1</option>
-            <option value="output2">Output 2</option>
-          </select>
-          <br />
-          <label htmlFor={`input-${index}`}>Input:</label>
-          <select
-            id={`input-${index}`}
-            value={task.input}
-            onChange={(e) =>
-              handleTaskInputChange(index, "input", e.target.value)
+              handleTaskInputChange(
+                index,
+                "outputs",
+                Array.from(e.target.selectedOptions, (option) => option.value)
+              )
             }
             required
           >
-            <option value="">Select input</option>
-            <option value="input1">Input 1</option>
-            <option value="input2">Input 2</option>
+            <option value="SMS Chart">SMS Chart</option>
+            <option value="Email Report">Email Report</option>
+            <option value="Dashboard Report">Dashboard Report</option>
+            <option value="Performance Metrics">Performance Metrics</option>
           </select>
           <br />
+          <label htmlFor={`inputs-${index}`}>using the</label>
+          <select
+            id={`inputs-${index}`}
+            value={task.inputs}
+            onChange={(e) =>
+              handleTaskInputChange(
+                index,
+                "inputs",
+                Array.from(e.target.selectedOptions, (option) => option.value)
+              )
+            }
+            required
+          >
+            <option value="Customer Tech Pack">Customer Tech Pack</option>
+            <option value="Financial Data">Financial Data</option>
+            <option value="Sales Data">Sales Data</option>
+            <option value="Customer Feedback">Customer Feedback</option>
+          </select>
+          <br />
+          <HighlightOffIcon
+            className="delete-icon"
+            onClick={() => handleDeleteTaskClick(index)}
+          />
           <div className="divider"></div>
         </div>
       ))}
       <button
         type="button"
+        className="add-task-button"
         onClick={handleAddTaskClick}
         disabled={isAddTaskButtonDisabled}
       >
+        <AddIcon />
         Add new task
       </button>
       <br />
       <button
         type="button"
+        className="done-button"
         onClick={handleDoneClick}
         disabled={isDoneButtonDisabled}
       >
