@@ -111,49 +111,51 @@ const TaskDataCollectionForm: React.FC = () => {
       <h2>Tell us about yourself</h2>
       {tasks.map((task, index) => (
         <div key={index} className="task-item">
-          <label htmlFor={`outputs-${index}`}> {index + 1} I create the</label>
-          <select
-            id={`outputs-${index}`}
-            value={task.outputs}
-            onChange={(e) =>
-              handleTaskInputChange(
-                index,
-                "outputs",
-                Array.from(e.target.selectedOptions, (option) => option.value)
-              )
-            }
-            required
-          >
-            <option value="SMS Chart">SMS Chart</option>
-            <option value="Email Report">Email Report</option>
-            <option value="Dashboard Report">Dashboard Report</option>
-            <option value="Performance Metrics">Performance Metrics</option>
-          </select>
-          <br />
-          <label htmlFor={`inputs-${index}`}>using the</label>
-          <select
-            id={`inputs-${index}`}
-            value={task.inputs}
-            onChange={(e) =>
-              handleTaskInputChange(
-                index,
-                "inputs",
-                Array.from(e.target.selectedOptions, (option) => option.value)
-              )
-            }
-            required
-          >
-            <option value="Customer Tech Pack">Customer Tech Pack</option>
-            <option value="Financial Data">Financial Data</option>
-            <option value="Sales Data">Sales Data</option>
-            <option value="Customer Feedback">Customer Feedback</option>
-          </select>
-          <br />
+          {" "}
+          <p className="nowrap">{index + 1} I create the</p>{" "}
+          <span>
+            <select
+              id={`outputs-${index}`}
+              value={task.outputs}
+              onChange={(e) =>
+                handleTaskInputChange(
+                  index,
+                  "outputs",
+                  Array.from(e.target.selectedOptions, (option) => option.value)
+                )
+              }
+              required
+            >
+              <option value="SMS Chart">SMS Chart</option>
+              <option value="Email Report">Email Report</option>
+              <option value="Dashboard Report">Dashboard Report</option>
+              <option value="Performance Metrics">Performance Metrics</option>
+            </select>
+          </span>
+          <p className="nowrap">using the</p>
+          <span>
+            <select
+              id={`inputs-${index}`}
+              value={task.inputs}
+              onChange={(e) =>
+                handleTaskInputChange(
+                  index,
+                  "inputs",
+                  Array.from(e.target.selectedOptions, (option) => option.value)
+                )
+              }
+              required
+            >
+              <option value="Customer Tech Pack">Customer Tech Pack</option>
+              <option value="Financial Data">Financial Data</option>
+              <option value="Sales Data">Sales Data</option>
+              <option value="Customer Feedback">Customer Feedback</option>
+            </select>
+          </span>
           <HighlightOffIcon
             className="delete-icon"
             onClick={() => handleDeleteTaskClick(index)}
           />
-          <div className="divider"></div>
         </div>
       ))}
       <button

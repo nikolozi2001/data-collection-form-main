@@ -3,14 +3,21 @@
 }
 
 .task-item {
+  display: flex;
+  flex-direction: row;
   padding: 10px;
   border: 1px dashed #d9d9d9;
   border-radius: 4px;
   transition: border-color 0.3s;
+  align-items: center;
 }
 
 .task-item:hover {
   border-color: #40a9ff;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 /* Input styles */
