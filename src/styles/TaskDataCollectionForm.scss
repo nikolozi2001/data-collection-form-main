@@ -58,7 +58,6 @@
   .add-task-button {
     width: 100%;
     display: inline-block;
-    margin-top: 10%;
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 500;
@@ -94,6 +93,10 @@
       color: #40a9ff;
       background: transparent !important;
     }
+  }
+
+  .done-button {
+    margin-top: 10%;
   }
 
   .confirmation-modal {
