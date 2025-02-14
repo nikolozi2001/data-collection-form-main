@@ -67,22 +67,6 @@ select:focus {
   margin: 16px 0;
 }
 
-.confirmation-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-}
-
-.confirmation-modal button {
-  margin: 5px;
-}
-
 /* Responsive styles */
 @media (max-width: 768px) {
   form {

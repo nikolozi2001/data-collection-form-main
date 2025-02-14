@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "../styles/TaskDataCollectionForm.css";
+import "../styles/TaskDataCollectionForm.scss";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AddIcon from "@mui/icons-material/Add";
 import MailIcon from "@mui/icons-material/Mail";
 
@@ -37,10 +39,10 @@ const TaskDataCollectionForm: React.FC = () => {
   const handleTaskInputChange = (
     index: number,
     field: "outputs" | "inputs",
-    value: string[]
+    value: string | string[]
   ) => {
     const newTasks = [...tasks];
-    newTasks[index][field] = value;
+    newTasks[index][field] = Array.isArray(value) ? value : [value];
     setTasks(newTasks);
     validateTaskInputs(newTasks);
   };
@@ -93,11 +95,13 @@ const TaskDataCollectionForm: React.FC = () => {
       })
       .then((data) => {
         console.log("Success:", data);
-        alert("Form submitted successfully!");
+        toast.success("Form submitted successfully!");
       })
       .catch((error) => {
+        toast.error(
+          "There was an error submitting the form. Please try again."
+        );
         console.error("Error:", error);
-        alert("There was an error submitting the form. Please try again.");
       });
   };
 
@@ -111,21 +115,17 @@ const TaskDataCollectionForm: React.FC = () => {
       <h2>Tell us about yourself</h2>
       {tasks.map((task, index) => (
         <div key={index} className="task-item">
-          {" "}
-          <p className="nowrap">{index + 1} I create the</p>{" "}
+          <p className="nowrap">{index + 1} I create the</p>
           <span>
             <select
               id={`outputs-${index}`}
-              value={task.outputs}
+              value={task.outputs[0] || ""}
               onChange={(e) =>
-                handleTaskInputChange(
-                  index,
-                  "outputs",
-                  Array.from(e.target.selectedOptions, (option) => option.value)
-                )
+                handleTaskInputChange(index, "outputs", e.target.value)
               }
               required
             >
+              <option value="">Select output</option>
               <option value="SMS Chart">SMS Chart</option>
               <option value="Email Report">Email Report</option>
               <option value="Dashboard Report">Dashboard Report</option>
@@ -136,16 +136,13 @@ const TaskDataCollectionForm: React.FC = () => {
           <span>
             <select
               id={`inputs-${index}`}
-              value={task.inputs}
+              value={task.inputs[0] || ""}
               onChange={(e) =>
-                handleTaskInputChange(
-                  index,
-                  "inputs",
-                  Array.from(e.target.selectedOptions, (option) => option.value)
-                )
+                handleTaskInputChange(index, "inputs", e.target.value)
               }
               required
             >
+              <option value="">Select input</option>
               <option value="Customer Tech Pack">Customer Tech Pack</option>
               <option value="Financial Data">Financial Data</option>
               <option value="Sales Data">Sales Data</option>
